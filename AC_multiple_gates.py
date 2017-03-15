@@ -5,11 +5,14 @@
 
 from AA_a_gate import forward_multiply_gate
 
-def forward_add_gate(x, y):
+def forward_add_gate(*args):
     """
     A gate that performs addition of two addends.
     """
-    return x + y
+    r = 0
+    for a in args:
+        r += a
+    return r
 
 def forward_circuit(x, y, z):
     """
