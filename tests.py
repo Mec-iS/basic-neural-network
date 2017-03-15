@@ -21,12 +21,16 @@ from AE_single_neuron import *
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
-u1 = Unit(5)
-u2 = Unit(-2)
-u3 = Unit(-4)
+# init inputs
+u1 = Unit(5.0)
+u2 = Unit(-2.0)
+u3 = Unit(-4.0)
+
+# init output
+circuit_output = None
 
 assert u1.value == 5 and u2.value == -2 and u3.value == -4
-assert u1.grad == 0.0 and u2.grad == 0.0 and u3.grad == 0.0
+assert u1.grad == 1.0 and u2.grad == 1.0 and u3.grad == 1.0
 
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 print('Load inputs:')
@@ -42,4 +46,13 @@ print('---------------------------------------')
 print('Feed-forward:')
 print('Gate a results in {} | Gate b results in {}'.format(a.value, b.value))
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+# the final output of the circuit and the starting gradient for the backprop
+circuit_output = b  # value=-12 grad=1.0
+
+print(circuit_output, circuit_output.multipliers)
+circuit_output.backward()
+print(circuit_output, circuit_output.multipliers)
+print(tuple(str(m) for m in circuit_output.multipliers))
+#backprop1 = multiplyGate(circuit_output).output.grad 
 

@@ -1,5 +1,5 @@
 """
-A neuron with a signmoid activation function
+A neuron with a sigmoid activation function
 """
 import numpy as np
 
@@ -31,11 +31,17 @@ class Unit:
      x, y, z, q, f are Units
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     """
-    def __init__(self, value, grad=0.0):
+    def __init__(self, value, grad=1.0):
         # value computed in the forward pass
         self.value = value 
         # the derivative of circuit output w.r.t this unit, computed in backward pass
         self.grad = grad
+
+    def __str__(self):
+        return 'Unit_{}: value {} - gradient {}'.format(str(id(self)), self.value, self.grad)
+
+    def __repr__(self):
+        return 'Unit_{}: value {} - gradient {}'.format(str(id(self)), self.value, self.grad)
 
 
 class Gate:
@@ -51,11 +57,25 @@ class Gate:
                 raise TypeError() 
         
         # init output
-        self.output = Unit(self.value, 0.0)
+        self.output = Unit(self.value)
+
+    def __str__(self):
+        return 'Gate_{}: value {} - gradient {}'.format(str(id(self)), self.value, self.grad)
+
+    def __repr__(self):
+        return 'Gate_{}: value {} - gradient {}'.format(str(id(self)), self.value, self.grad)
 
     @property
     def value(self):
         return self.forward()
+    
+    @property
+    def grad(self):
+        return self.output.grad
+
+    @grad.setter
+    def grad(self, obj):
+        self.output.grad = obj
 
     def forward():
         raise NotImplemented()
@@ -146,4 +166,4 @@ class sigmoidGate(Gate):
         # quote: 'take the gradient in output unit and chain it with the
         # local gradients, which we derived for multiply gate before
         # then write those gradients to those Units.'
-        self.output.grad = self.sig_deriv(self.value) 
+        self.output.grad += self.sig_deriv(self.value) 
