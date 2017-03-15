@@ -48,11 +48,41 @@ print('Gate a results in {} | Gate b results in {}'.format(a.value, b.value))
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 # the final output of the circuit and the starting gradient for the backprop
-circuit_output = b  # value=-12 grad=1.0
+c = sigmoidGate(b)
+circuit_output = c  # value=-12 grad=1.0
 
-print(circuit_output, circuit_output.multipliers)
-circuit_output.backward()
-print(circuit_output, circuit_output.multipliers)
-print(tuple(str(m) for m in circuit_output.multipliers))
-#backprop1 = multiplyGate(circuit_output).output.grad 
+def backprop():
+    """Update all the values using the gradient of each function"""
+    #print(circuit_output, circuit_output.multipliers)
+    
+    circuit_output.backward()
 
+    b.backward()
+    
+    #print(circuit_output, circuit_output.multipliers)
+    #print(tuple(str(m) for m in circuit_output.multipliers))
+    
+    a.backward()
+
+backprop()
+
+def descent():
+    """Update the forward pass with gradient descent"""
+    step_size = -0.01
+    u1.value += step_size * u1.grad
+    u2.value += step_size * u2.grad
+    u3.value += step_size * u3.grad
+
+descent()
+
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+print('Load inputs:')
+print('Input 1 is {} | input 2 is {} | input 3 is {}'.format(u1.value, u2.value, u3.value))
+
+a = addGate(u1, u2)
+b = multiplyGate(a, u3)
+
+print('---------------------------------------')
+print('Feed-forward:')
+print('Gate a results in {} | Gate b results in {}'.format(a.value, b.value))
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')

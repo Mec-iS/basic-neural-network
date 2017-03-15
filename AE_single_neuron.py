@@ -147,18 +147,19 @@ class sigmoidGate(Gate):
     """
     A gate for the sigmoid activation function
     """
-    sigmoid = lambda x: 1 / (1 + np.exp(-x))
-    sig_deriv = lambda x: x * (1 - x)
 
     def __init__(self, *args):
         # initialize super-class to be an adding gate
-        super(addGate, self).__init__(
+        self.sigmoid = lambda x: 1 / (1 + np.exp(-x))
+        self.sig_deriv = lambda x: x * (1 - x)
+        
+        super(sigmoidGate, self).__init__(
                 self.sigmoid, *args
         )
         self.input_ = args[0]
 
     def forward(self):
-        return self.operation(
+        return self.sigmoid(
             self.inputs[0]
         )
 
