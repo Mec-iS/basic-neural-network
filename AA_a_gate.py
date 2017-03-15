@@ -4,4 +4,4 @@ def forward_multiply_gate(*args):
         r *= a
     return r
 
-print(forward_multiply_gate(-2, 3))  # returns -6
+forward_multiply_gate(-2, 3)  # returns -6
