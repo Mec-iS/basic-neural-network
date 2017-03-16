@@ -78,10 +78,10 @@ class Gate:
         self.output.grad = obj
 
     def forward():
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def backward():
-        raise NotImplemented()
+        raise NotImplementedError()
 
 
 class multiplyGate(Gate):
@@ -106,11 +106,9 @@ class multiplyGate(Gate):
         # local gradients, which we derived for multiply gate before
         # then write those gradients to those Units.'
         list_ = list(self.multipliers)
-        for m in list_:
+        for i, m in enumerate(list_):
             # update the gradient for each unit 
-            m.grad += m.value * self.output.grad
-
-        self.multipliers = tuple(list_)
+            list_[i].grad += list_[i].value * self.output.grad
     
 class addGate(Gate):
     """
@@ -137,11 +135,9 @@ class addGate(Gate):
         # local gradients, which we derived for multiply gate before
         # then write those gradients to those Units.'
         list_ = list(self.addends)
-        for m in list_:
+        for i, m in enumerate(list_):
             # update the gradient for each unit 
-            m.grad += m.value * self.output.grad
-
-        self.addends = tuple(list_)
+            list_[i].grad += list_[i].value * self.output.grad
 
 class sigmoidGate(Gate):
     """
@@ -167,4 +163,5 @@ class sigmoidGate(Gate):
         # quote: 'take the gradient in output unit and chain it with the
         # local gradients, which we derived for multiply gate before
         # then write those gradients to those Units.'
-        self.output.grad += self.sig_deriv(self.value) 
+        print(self.output.grad, self.sig_deriv(self.value))
+        self.output.grad += self.sig_deriv(self.value)
